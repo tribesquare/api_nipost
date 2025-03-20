@@ -27,4 +27,14 @@ class ApiController extends Controller
   {
     return $this->authorize($ability, [$targetModel, $this->policyClass]);
   }
+
+  public function passwordGenerator($length = 8)
+  {
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+    return substr(
+      str_shuffle($chars),
+      0,
+      $length
+    );
+  }
 }

@@ -15,16 +15,16 @@ class RoleSeeder extends Seeder
   {
     $roles = [
       [
-        'name' => 'admin',
-        'uuid' => Str::uuid(),
-        'slug' => 'admin',
-        'description' => 'Admin role'
-      ],
-      [
         'name' => 'user',
         'uuid' => Str::uuid(),
         'slug' => 'user',
         'description' => 'User role'
+      ],
+      [
+        'name' => 'admin',
+        'uuid' => Str::uuid(),
+        'slug' => 'admin',
+        'description' => 'Admin role'
       ],
       [
         'name' => 'super admin',
