@@ -27,6 +27,8 @@ final class Abilities
 
   public const GetAudit = 'audit:get';
 
+  public const GetRole = 'role:get';
+
   public static function getAbilities(User $user)
   {
     // don't assign '*'
@@ -44,7 +46,8 @@ final class Abilities
         self::ReplaceUser,
         self::DeleteUser,
         self::ViewAnyUser,
-        self::ResetPassword
+        self::ResetPassword,
+        self::GetRole
       ]);
     } else {
       return [

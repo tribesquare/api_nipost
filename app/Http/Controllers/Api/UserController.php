@@ -48,8 +48,10 @@ class UserController extends ApiController
   public function generatePassword()
   {
     try {
-      return $this->ok('Password Generated Successfully
-    ', ['password' => $this->generatePassword()]);
+      return $this->ok(
+        'Password Generated Successfully',
+        ['password' => $this->passwordGenerator()]
+      );
     } catch (Throwable $th) {
       return $this->error($th->getMessage());
     }
@@ -75,7 +77,8 @@ class UserController extends ApiController
     return $this->ok('');
   }
 
-  public function resetUserPassword(ResetPasswordRequest $request) {
+  public function resetUserPassword(ResetPasswordRequest $request)
+  {
     try {
       $this->isAble('resetPassword', User::class);
       $payload = (object) $request->validated();

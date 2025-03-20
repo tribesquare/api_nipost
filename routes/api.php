@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuditController;
+use App\Http\Controllers\Api\RolesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Models\User;
@@ -18,4 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('staffs', [UserController::class, 'addStaff']); // only super admin and admin can access
   Route::get('staffs', [UserController::class, 'getStaffs']); // only super admin and admin can access
   Route::put('staffs/reset-password', [UserController::class, 'resetUserPassword']); // only super admin and admin can access
+  Route::get('staffs/roles', [RolesController::class, 'index']); // only super admin and admin can access
 });
