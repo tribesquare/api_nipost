@@ -23,8 +23,7 @@ class AuditController extends ApiController
     try {
       // policy
       $this->isAble('get', Audit::class);
-      $audits = $this->auditService->paginate(20);
-      return $this->ok('audit retrieved successfully', AuditResource::collection($audits));
+      return $this->ok('audit retrieved successfully', AuditResource::collection(Audit::filter($filters)->paginate()));
     } catch (Throwable $th) {
       $this->error($th->getMessage());
     }

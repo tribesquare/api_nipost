@@ -17,6 +17,15 @@ abstract class QueryFilter
     $this->request = $request;
   }
 
+  public function apply(Builder $builder): Builder
+  {
+    $this->builder = $builder;
+
+    $this->iterateAndCallMethod($this->request->all());
+
+    return $builder;
+  }
+
   public function sort($value): void
   {
     $sortAttributes = explode(',', $value);
@@ -39,15 +48,6 @@ abstract class QueryFilter
       }
       $this->builder->orderBy($column, $direction);
     }
-  }
-
-  public function apply(Builder $builder): Builder
-  {
-    $this->builder = $builder;
-
-    $this->iterateAndCallMethod($this->request->all());
-
-    return $builder;
   }
 
   public function iterateAndCallMethod(array $array): void

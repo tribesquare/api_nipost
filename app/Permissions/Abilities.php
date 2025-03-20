@@ -15,9 +15,15 @@ final class Abilities
   public const DeleteOwnParcel = 'Parcel:own:delete';
 
   public const CreateUser = 'staff:create';
+
+  public const ViewAnyUser = 'staff:viewAny';
+
+  public const ViewUser = 'staff:view';
   public const UpdateUser = 'staff:update';
   public const ReplaceUser = 'staff:replace';
   public const DeleteUser = 'staff:delete';
+
+  public const ResetPassword = 'staff:resetPassword';
 
   public const GetAudit = 'audit:get';
 
@@ -37,6 +43,8 @@ final class Abilities
         self::UpdateUser,
         self::ReplaceUser,
         self::DeleteUser,
+        self::ViewAnyUser,
+        self::ResetPassword
       ]);
     } else {
       return [
@@ -44,6 +52,7 @@ final class Abilities
         self::UpdateOwnParcel,
         self::DeleteOwnParcel,
         self::CreateParcel,
+        self::ViewUser
       ];
     }
   }

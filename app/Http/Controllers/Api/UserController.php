@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use Throwable;
+use App\Models\User;
 use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Http\Filters\UserFilter;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\RegistrationRequest;
-use App\Models\User;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 
 class UserController extends ApiController
 {
@@ -27,6 +29,17 @@ class UserController extends ApiController
         'Staff Added Successfully',
         new UserResource($this->userService->addStaff($payload))
       );
+    } catch (Throwable $th) {
+      return $this->error($th->getMessage());
+    }
+  }
+
+  public function getStaffs(UserFilter $userFilter)
+  {
+    try {
+      $this->isAble('view', User::class);
+
+      return $this->ok('Staff Fetched Successfully', UserResource::collection(User::filter($userFilter)->paginate()));
     } catch (Throwable $th) {
       return $this->error($th->getMessage());
     }
@@ -60,5 +73,19 @@ class UserController extends ApiController
     $request->user()->tokens()->where('id', $request->user()->currentAccessToken()->id)->delete();
 
     return $this->ok('');
+  }
+
+  public function resetUserPassword(ResetPasswordRequest $request) {
+    try {
+      $this->isAble('resetPassword', User::class);
+      $payload = (object) $request->validated();
+
+      return $this->ok(
+        'Password Reset Successfully',
+        new UserResource($this->userService->resetUserPassword($payload))
+      );
+    } catch (Throwable $th) {
+      return $this->error($th->getMessage());
+    }
   }
 }

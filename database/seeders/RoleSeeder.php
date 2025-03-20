@@ -17,19 +17,19 @@ class RoleSeeder extends Seeder
       [
         'name' => 'user',
         'uuid' => Str::uuid(),
-        'slug' => 'user',
+        'slug' => Str::slug('user', '-'),
         'description' => 'User role'
       ],
       [
         'name' => 'admin',
         'uuid' => Str::uuid(),
-        'slug' => 'admin',
+        'slug' => Str::slug('admin', '-'),
         'description' => 'Admin role'
       ],
       [
         'name' => 'super admin',
         'uuid' => Str::uuid(),
-        'slug' => 'super-admin',
+        'slug' => Str::slug('super admin', '-'),
         'description' => 'Super Admin role'
       ],
     ];

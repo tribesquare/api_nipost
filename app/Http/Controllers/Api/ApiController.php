@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Traits\General;
 use App\Traits\ApiResponses;
+use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
-  use ApiResponses;
+  use ApiResponses, General;
   protected $policyClass;
 
   public function include(string $relationship): bool
@@ -26,15 +27,5 @@ class ApiController extends Controller
   public function isAble($ability, $targetModel)
   {
     return $this->authorize($ability, [$targetModel, $this->policyClass]);
-  }
-
-  public function passwordGenerator($length = 8)
-  {
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
-    return substr(
-      str_shuffle($chars),
-      0,
-      $length
-    );
   }
 }

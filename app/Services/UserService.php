@@ -2,17 +2,20 @@
 
 namespace App\Services;
 
+use App\Traits\General;
 use Exception;
 use App\Models\User;
-use App\Notifications\WelcomeEmailNotification;
 use App\Permissions\Abilities;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\WelcomeEmailNotification;
+use App\Notifications\PasswordResetNotification;
 
 class UserService extends BaseService
 {
+  use General;
   public function __construct(protected UserRepository $userRepository, protected AuditService $auditService)
   {
     parent::__construct($userRepository);
@@ -79,6 +82,28 @@ class UserService extends BaseService
       'user' => $user
     ];
     $user->notify(new WelcomeEmailNotification($emailPayload));
+    return $user;
+  }
+
+  public function resetUserPassword($payload)
+  {
+    $password = $this->passwordGenerator();
+    $user = $this->userRepository->find($payload->user_id);
+    $user->password = Hash::make($password);
+    $user->save();
+    $this->auditService->log([
+      'staff_id' => Auth::user()->staff_code,
+      'action' => 'Reset Password',
+      'resources' => 'User',
+      'description' => "Password reset for $user->name",
+      'created_by' => Auth::user()->name,
+      'status' => 'completed'
+    ]);
+    $emailPayload = (object) [
+      'password' => $password,
+      'user' => $user
+    ];
+    $user->notify(new PasswordResetNotification($emailPayload));
     return $user;
   }
 }
