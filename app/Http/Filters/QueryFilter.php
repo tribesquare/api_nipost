@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Http\Filters;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+abstract class QueryFilter
+{
+  protected Builder $builder;
+  protected Request $request;
+  protected array $sortable = [];
+
+  public function __construct(Request $request)
+  {
+    $this->request = $request;
+  }
+
+  public function sort($value): void
+  {
+    $sortAttributes = explode(',', $value);
+
+    foreach ($sortAttributes as $sortAttribute) {
+      $direction = str_starts_with($sortAttribute, '-') ? 'desc' : 'asc';
+      $column = Str::of($sortAttribute)->remove('-')->snake()->value();
+
+      if (
+        in_array($column, $this->sortable)
+        && !array_key_exists($column, $this->sortable)
+      ) {
+        continue;
+      }
+      $column = $this->sortable[$sortAttribute] ?? null;
+
+      if ($column === null) {
+        $column = $sortAttribute;
+        $column = $sortAttribute;
+      }
+      $this->builder->orderBy($column, $direction);
+    }
+  }
+
+  public function apply(Builder $builder): Builder
+  {
+    $this->builder = $builder;
+
+    $this->iterateAndCallMethod($this->request->all());
+
+    return $builder;
+  }
+
+  public function iterateAndCallMethod(array $array): void
+  {
+    foreach ($array as $key => $value) {
+      if (method_exists($this, $key)) {
+        $this->$key($value);
+      }
+    }
+  }
+
+  public function getRequest(): Request
+  {
+    return $this->request;
+  }
+}
