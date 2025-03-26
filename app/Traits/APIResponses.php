@@ -5,7 +5,7 @@ namespace App\Traits;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 
-trait APIResponses {
+trait ApiResponses {
     protected function ok($message, $data = []): JsonResponse {
         return $this->success($message, $data, 200);
     }
